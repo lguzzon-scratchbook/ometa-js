@@ -8,9 +8,9 @@ define([
 	'ometajs!ometa-src/bs-ometa-optimizer',
 	'ometajs!ometa-src/bs-ometa-compiler',
 	'ometajs!ometa-src/bs-js-compiler',
-	'ometajs!ometa-src/bs-ometa-js-compiler'], function(codeMirrorOmetaBridgeHighlighter, CodeMirror, $, uglify) {
+	'ometajs!ometa-src/bs-ometa-js-compiler'], function(codeMirrorOmetaHighlighter, CodeMirror, $, uglify) {
 	// Highlight directly from the parsers we just compiled from source.
-	codeMirrorOmetaBridgeHighlighter(BSOMetaJSParser, 'ometajs', 'text/ometajs', {disableReusingMemoizations: true});
+	codeMirrorOmetaHighlighter(BSOMetaJSParser, 'ometajs', 'text/ometajs', {disableReusingMemoizations: true});
 	$('#tabs').tab();
 	var ometaEditor = CodeMirror.fromTextArea($('#ometaEditor')[0], {
 		mode: {

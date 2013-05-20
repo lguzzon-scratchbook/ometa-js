@@ -2,7 +2,7 @@ define([
 	'codemirror-ometa-highlighter',
 	'codemirror',
 	'jquery',
-	'uglifyjs',
+	'uglify-js',
 	'bootstrap',
 	'codemirror-javascript',
 	'ometajs!ometa-src/bs-ometa-optimizer',

@@ -125,7 +125,7 @@ export ometa BSOMetaTranslator {
 }
 BSOMetaTranslator.jumpTableCode = function(cases) {
   var buf = [];
-  buf.push("(function(){switch(this._apply('anything')){");
+  buf.push("(function(){switch(this.anything()){");
   for (var i = 0; i < cases.length; ++i) {
     buf.push("case " + cases[i][0] + ":return " + cases[i][1] + ";");
   }

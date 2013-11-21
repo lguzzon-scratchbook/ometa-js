@@ -57,6 +57,11 @@ export ometa BSSeqInliner <: BSNullOptimization {
                  )
 }
 
+export ometa BSAnythingInliner <: BSNullOptimization {
+  App        = 'anything' end setHelped               -> ['Act', 'this.anything()']
+             | ^App
+}
+
 JumpTable = function(choiceOp, choice) {
   this.choiceOp = choiceOp
   this.choices = {}
@@ -95,6 +100,7 @@ export ometa BSOMetaOptimizer {
                        ( BSAssociativeOptimization.optimize(r):r
                        | BSJumpTableOptimization.optimize(r):r
                        | BSPushDownSet.optimize(r):r
+                       | BSAnythingInliner.optimize(r):r
                        )*                                        -> r
 }
 

@@ -113,7 +113,14 @@ export ometa BSOMetaTranslator {
              {this.sName = sName}
              trans*:rules                  -> ['var ', name, (exported ? "=exports." + name : ''), '=', sName, '._extend({', rules.join(','), '})'].join(''),
   intPart  = [:mode transFn:part]          -> (JSON.stringify(mode)  + "," + part),
-  jtCase   = [:x trans:e]                  -> [JSON.stringify(x), e],
+  jtCase   = [ :x
+               ( ['And' Seq:e]
+               | ['Act' Act:e]
+                 {['return ', e].join('')}:e
+               | trans:e
+                 {['return ', e].join('')}:e
+               )
+             ]                             -> [JSON.stringify(x), e],
   locals   = [string+:vs]                  -> ['var ', vs.join(','), ';']                                          .join('')
            | []                            -> '',
   params   = [string+:vs]                  -> vs.join(',')
@@ -127,7 +134,7 @@ BSOMetaTranslator.jumpTableCode = function(cases) {
   var buf = [];
   buf.push("(function(){switch(this.anything()){");
   for (var i = 0; i < cases.length; ++i) {
-    buf.push("case " + cases[i][0] + ":return " + cases[i][1] + ";");
+    buf.push("case " + cases[i][0] + ": " + cases[i][1] + ";");
   }
   buf.push("default: throw this._fail()}}).call(this)");
   return buf.join('');

@@ -87,8 +87,12 @@ export ometa BSOMetaTranslator {
   Or         transFn*:xs                   -> ['this._or(',  xs.join(','), ')']                                    .join(''),
   XOr        transFn*:xs                       { JSON.stringify(xs.unshift((this.name + "." + this.rName))) }
                                            -> ['this._xor(', xs.join(','), ')']                                    .join(''),
-  Seq        notLast(#trans)*:xs trans:y
-             {xs.push('return ' + y)}      -> xs.join(';'),
+  Seq        notLast(#trans)*:xs
+             ( ['JumpTable' jtSwitch:y]
+             | trans:y
+               {'return ' + y}:y
+             )
+             {xs.push(y)}                  -> xs.join(';'),
   Seq                                      -> 'undefined',
   And        Seq:xs                        -> ['(function(){', xs, '}).call(this)']                                .join(''),
   Opt        transFn:x                     -> ['this._opt(',           x, ')']                                     .join(''),
@@ -100,7 +104,7 @@ export ometa BSOMetaTranslator {
   Form       transFn:x                     -> ['this._form(',          x, ')']                                     .join(''),
   ConsBy     transFn:x                     -> ['this._consumedBy(',    x, ')']                                     .join(''),
   IdxConsBy  transFn:x                     -> ['this._idxConsumedBy(', x, ')']                                     .join(''),
-  JumpTable  jtCase*:cases                 -> this.jumpTableCode(cases),
+  JumpTable  jtSwitch:xs                   -> ['(function(){', xs, '}).call(this)']                                .join(''),
   Interleave intPart*:xs                   -> ['this._interleave(', xs.join(','), ')']                             .join(''),
   
   Rule       :name {this.rName = name}
@@ -113,8 +117,10 @@ export ometa BSOMetaTranslator {
              {this.sName = sName}
              trans*:rules                  -> ['var ', name, (exported ? "=exports." + name : ''), '=', sName, '._extend({', rules.join(','), '})'].join(''),
   intPart  = [:mode transFn:part]          -> (JSON.stringify(mode)  + "," + part),
+  jtSwitch = jtCase*:cases                 -> this.jumpTableCode(cases),
   jtCase   = [ :x
                ( ['And' Seq:e]
+               | ['JumpTable' jtSwitch:e]
                | ['Act' Act:e]
                  {['return ', e].join('')}:e
                | trans:e
@@ -127,16 +133,17 @@ export ometa BSOMetaTranslator {
            | []                            -> '',
   trans    = [:t apply(t):ans]             -> ans,
   transFn  = ( ['And' Seq:x]
+             | ['JumpTable' jtSwitch:x]
              | trans:x {['return ', x].join('')}:x
              )                             -> ['(function(){', x, '})']                                            .join('')
 }
 BSOMetaTranslator.jumpTableCode = function(cases) {
   var buf = [];
-  buf.push("(function(){switch(this.anything()){");
+  buf.push("switch(this.anything()){");
   for (var i = 0; i < cases.length; ++i) {
     buf.push("case " + cases[i][0] + ": " + cases[i][1] + ";");
   }
-  buf.push("default: throw this._fail()}}).call(this)");
+  buf.push("default: throw this._fail()}");
   return buf.join('');
 }
 

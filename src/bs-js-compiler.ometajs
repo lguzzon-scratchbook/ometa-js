@@ -20,12 +20,14 @@ export ometa BSJSParser {
                | '\'' (escapedChar | ~'\'' char)*:cs '\''                            -> [#string, cs.join('')]
                | '"'  (escapedChar | ~'"'  char)*:cs '"'                             -> [#string, cs.join('')]
                | ('#' | '`') iName:n                                                 -> [#string, n],
-  special      = ( '('   | ')'    | '{'    | '}'     | '['    | ']'     | ','
-                 | ';'   | '?'    | ':'    | ``!=='' | ``!='' | ``==='' | ``==''
-                 | ``='' | ``>='' | '>'    | ``<=''  | '<'    | ``++''  | ``+=''
-                 | '+'   | ``--'' | ``-='' | '-'     | ``*='' | '*'     | ``/=''
-                 | '/'   | ``%='' | '%'    | ``&&='' | ``&&'' | ``||='' | ``||''
-                 | '.'   | '!'                                                   ):s -> [s, s],
+  special      = ( '(' | ')' | '{' | '}' | '[' | ']' | ',' | ';' | '?' | ':' | '.'
+                 | ``!==''   | ``!='' | '!'    | ``==='' | ``=='' | '='
+                 | ``>=''    | '>'    | ``<='' | '<'
+                 | ``++''    | ``+='' | '+'    | ``--''  | ``-='' | '-'
+                 | ``*=''    | '*'    | ``/='' | '/'     | ``%='' | '%'
+                 | ``&&=''   | ``&&'' | ``&='' | '&'
+                 | ``||=''   | ``||'' | ``|='' | '|'
+                 | ``^=''    | '^'    | '~'):s                                       -> [s, s],
   tok          = spaces (name | constant | keyword | special | number | str),
   toks         = token*:ts spaces end                                                -> ts,
   token :tt    = tok:t ?(t[0] == tt)                                                 -> t[1],
@@ -35,21 +37,20 @@ export ometa BSJSParser {
   commaExpr = commaExpr:e1 "," asgnExpr:e2 -> [#binop, ",", e1, e2]
             | asgnExpr,
   asgnExpr     = condExpr:e ( "="   asgnExpr:rhs                                     -> [#set,  e, rhs]
-                            | "+="  asgnExpr:rhs                                     -> [#mset, e, "+",  rhs]
-                            | "-="  asgnExpr:rhs                                     -> [#mset, e, "-",  rhs]
-                            | "*="  asgnExpr:rhs                                     -> [#mset, e, "*",  rhs]
-                            | "/="  asgnExpr:rhs                                     -> [#mset, e, "/",  rhs]
-                            | "%="  asgnExpr:rhs                                     -> [#mset, e, "%",  rhs]
-                            | "&&=" asgnExpr:rhs                                     -> [#mset, e, "&&", rhs]
-                            | "||=" asgnExpr:rhs                                     -> [#mset, e, "||", rhs]
+                            | ( "+=" | "-=" | "*=" | "/="
+                              | "%=" | "&&=" | "||="
+                              | "&=" | "^="  | "|=" ):op asgnExpr:rhs                -> [#mset, e, op.slice(0, -1), rhs]
                             | empty                                                  -> e
                             ),
+
   condExpr     = orExpr:e ( "?"   condExpr:t   ":" condExpr:f                        -> [#condExpr, e, t, f]
                           | empty                                                    -> e
                           ),
   orExpr       = orExpr:x "||" andExpr:y                                             -> [#binop, "||", x, y]
                | andExpr,
-  andExpr      = andExpr:x "&&" eqExpr:y                                             -> [#binop, "&&", x, y]
+  andExpr      = andExpr:x "&&" bitExpr:y                                            -> [#binop, "&&", x, y]
+               | bitExpr,
+  bitExpr      = bitExpr:x ("|"|"^"|"&"):op eqExpr:y                                 -> [#binop, op, x, y]
                | eqExpr,
   eqExpr       = eqExpr:x ( "=="  relExpr:y                                          -> [#binop, "==",  x, y]
                           | "!="  relExpr:y                                          -> [#binop, "!=",  x, y]
@@ -76,6 +77,7 @@ export ometa BSJSParser {
                | "++"     postfix:p                                                  -> [#preop, "++",       p]
                | "--"     postfix:p                                                  -> [#preop, "--",       p]
                | "!"      unary:p                                                    -> [#unop,  "!",        p]
+               | "~"      unary:p                                                    -> [#unop,  "~",        p]
                | "void"   unary:p                                                    -> [#unop,  "void",     p]
                | "delete" unary:p                                                    -> [#unop,  "delete",   p]
                | "typeof" unary:p                                                    -> [#unop,  "typeof",   p]

@@ -4,12 +4,11 @@
 		<title>OMetaJS With RequireJS</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="../vendor/bootstrap.min.css" rel="stylesheet">
-		<link href="../vendor/codemirror.css" rel="stylesheet">
+		<link href="https://cdn.rawgit.com/marijnh/CodeMirror/4.2.0/lib/codemirror.css" rel="stylesheet">
 		<link href="../../lib/codemirror-ometa/ometajs.css" rel="stylesheet">
 		<style type='text/css'>
 			.CodeMirror {
 				border: 1px solid #ADABB3;
-				
 			}
 		</style>
 		<script src="http://requirejs.org/docs/release/2.1.5/minified/require.js"></script>
@@ -27,10 +26,15 @@
 
 					//Libraries
 					'bootstrap'						: '../vendor/bootstrap.min',
-					'codemirror'					: '../vendor/codemirror',
-					'codemirror-javascript'			: '../vendor/javascript',
 					'jquery'						: '../vendor/jquery.min'
 				},
+				packages: [
+					{
+						name: 'codemirror',
+						location: 'https://cdn.rawgit.com/marijnh/CodeMirror/4.2.0',
+						main: 'lib/codemirror'
+					}
+				],
 				shim: {
 					'bootstrap': {
 						deps: ['jquery']

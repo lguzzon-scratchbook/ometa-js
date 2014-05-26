@@ -4,7 +4,7 @@ define([
 	'jquery',
 	'uglify-js',
 	'bootstrap',
-	'codemirror-javascript',
+	'codemirror/mode/javascript/javascript',
 	'ometajs!ometa-src/bs-ometa-optimizer',
 	'ometajs!ometa-src/bs-ometa-compiler',
 	'ometajs!ometa-src/bs-js-compiler',

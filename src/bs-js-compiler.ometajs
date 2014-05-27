@@ -92,7 +92,7 @@ export ometa BSJSParser {
                                   isKeyword(m)                                       -> [#send, m, p].concat(as)
                             | "." "name":f                                           -> [#getp, [#string, f], p]
                             | "." spaces iName:f isKeyword(f)                        -> [#getp, [#string, f], p]
-                            | "(" listOf(#asgnExpr, ','):as ")"                      -> [#call, p].concat(as)
+                            | '(' listOf(#asgnExpr, ','):as ")"                      -> [#call, p].concat(as)
                             )
                | primExprHd,
   primExprHd   = "(" expr:e ")"                                                      -> e

@@ -17,6 +17,9 @@
     "url": "http://github.com/Page-/ometa-js/issues"
   },
   "main": "./lib/ometajs",
+  "bin": {
+    "ometajs2js": "./bin/ometajs2js"
+  },
   "directories": {
     "doc": "./doc",
     "lib": "./lib"
@@ -33,9 +36,6 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-nodeunit": "~0.2.2",
     "grunt-docco": "~0.3.0"
-  },
-  "bin": {
-    "ometajs2js": "./bin/ometajs2js"
   },
   "engines": {
     "node": ">=0.2.0"

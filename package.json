@@ -47,6 +47,7 @@
     }
   ],
   "scripts": {
+    "prepublish": "grunt",
     "test": "grunt nodeunit"
   }
 }

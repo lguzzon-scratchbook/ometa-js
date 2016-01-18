@@ -118,7 +118,7 @@ export ometa BSJSParser {
   regExpClassChar = ~']' regExpNonTerm,
   regExpFlag   = nameFirst,
   formal       = spaces "name",
-  funcRest     = "(" listOf(#formal, ','):fs ")" "{" srcElems:body "}"               -> [#func, fs, body],
+  funcRest     = "name"?:n "(" listOf(#formal, ','):fs ")" "{" srcElems:body "}"     -> [#func, n, fs, body],
   sc           = spacesNoNl ('\n' | &'}' | end)
                | ";",
   binding      = "name":n ~isConstant(n)
@@ -160,7 +160,7 @@ export ometa BSJSParser {
                | "with" "(" expr:x ")" stmt:s                                        -> [#with, x, s]
                | expr:e sc                                                           -> e
                | ";"                                                                 -> [#get, "undefined"],
-  srcElem      = "function" "name":n funcRest:f                                      -> [#var, [n, f]]
+  srcElem      = "function" funcRest:f                                               -> [#var, [n, f]]
                | stmt,
   srcElems     = srcElem*:ss                                                         -> [#begin].concat(ss),
 
@@ -181,7 +181,7 @@ export ometa BSSemActionParser <: BSJSParser {
                  | "{" (srcElem:s &srcElem -> s)*:ss
                        ( asgnExpr:r sc -> [#return, r] | srcElem):s {ss.push(s)}
                    "}" spaces                                                -> [#send, #call,
-                                                                                        [#func, [], [#begin].concat(ss)],
+                                                                                        [#func, null, [], [#begin].concat(ss)],
                                                                                         [#this]],
   semAction      = curlySemAction
                  | primExpr:r spaces                                         -> r
@@ -273,7 +273,7 @@ export ometa BSJSTranslator {
               | empty                             -> (x  + ';')
               )
            )*:xs                                        -> ('{' + xs.join('') + '}'),
-  func     :args curlyTrans:body                        -> ('(function (' + args.join(',') + ')' + body + ')'),
+  func     :name :args curlyTrans:body                  -> ('(function ' + (name || '') + '(' + args.join(',') + ')' + body + ')'),
   call     trans:fn trans*:args                         -> (fn + '(' + args.join(',') + ')'),
   send     :msg trans:recv trans*:args                  -> (recv + '.' + msg + '(' + args.join(',') + ')'),
   new      :cls trans*:args                             -> ('new ' + cls + '(' + args.join(',') + ')'),

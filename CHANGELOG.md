@@ -1,3 +1,5 @@
+* Improved the performance of `_not` by allowing it to be optimised.
+
 v1.4.1
 
 * Fixed a bug with function declarations.

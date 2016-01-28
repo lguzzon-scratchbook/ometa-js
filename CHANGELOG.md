@@ -1,3 +1,7 @@
+v1.4.1
+
+* Fixed a bug with function declarations.
+
 v1.4.0
 
 * Added support for named function expressions.

@@ -1,3 +1,5 @@
+v1.4.2
+
 * Improved the performance of `_not` by allowing it to be optimised.
 
 v1.4.1

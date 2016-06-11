@@ -1,3 +1,7 @@
+* Added support for using `_form` (`[]`) on an object input,
+	for this the object is converted into a list of key, value tuples
+	eg `{ foo: 'bar' }` -> `[ ['foo', 'bar'] ]`
+
 v1.4.2
 
 * Improved the performance of `_not` by allowing it to be optimised.

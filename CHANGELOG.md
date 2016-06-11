@@ -1,3 +1,5 @@
+* Added support for matching some keys of an object against corresponding rules,
+	eg `%{ foo: FooRule }`
 * Added support for matching all keys of an object against corresponding rules,
 	eg `@{ foo: FooRule }`
 * Added support for using `_form` (`[]`) on an object input,

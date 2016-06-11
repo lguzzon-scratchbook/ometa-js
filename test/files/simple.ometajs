@@ -26,4 +26,13 @@ export ometa Simple {
 			@{ 'simple': true }
 			-> 'should fail'
 		|	-> 'ok'
+	,
+	ObjectRulesMatchPartial1 =
+		%{ 'simple': true }
+		-> 'ok'
+	,
+	ObjectRulesMatchPartial2 =
+			%{ 'simple': true, 'simpler': true }
+			-> 'should fail'
+		|	-> 'ok'
 }

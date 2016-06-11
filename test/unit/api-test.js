@@ -25,7 +25,8 @@ var testMatches = {
 	ObjectRulesMatchAll1: { 'simple': true },
 	ObjectRulesMatchAll2: { 'simple': true, 'simpler': true },
 	ObjectRulesMatchPartial1: { 'simple': true, 'simpler': true },
-	ObjectRulesMatchPartial2: { 'simple': true }
+	ObjectRulesMatchPartial2: { 'simple': true },
+	ObjectRulesMatchOptional: { 'simple': true }
 };
 
 var runTests = function(test, grammar) {

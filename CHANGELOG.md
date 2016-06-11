@@ -1,3 +1,4 @@
+* Added support for optionally matching keys of an object, eg `@{ foo?: true }`
 * Added support for matching some keys of an object against corresponding rules,
 	eg `%{ foo: FooRule }`
 * Added support for matching all keys of an object against corresponding rules,

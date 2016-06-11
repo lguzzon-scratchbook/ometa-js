@@ -35,4 +35,8 @@ export ometa Simple {
 			%{ 'simple': true, 'simpler': true }
 			-> 'should fail'
 		|	-> 'ok'
+	,
+	ObjectRulesMatchOptional =
+		@{ 'simple': true, 'simpler'?: true }
+		-> 'ok'
 }

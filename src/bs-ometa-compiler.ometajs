@@ -64,7 +64,10 @@ export ometa BSOMetaParser {
   objectRules    = {{}}:o
                    (objectRule:x "," -> x)*:a
                    objectRule:x                                        -> a.concat([x]),
-  objectRule     = BSJSParser.jsonPropName:n ":" expr:x                -> [n, x],
+  objectRule     = BSJSParser.jsonPropName:n
+                   ( "?" -> false
+                   |     -> true
+                   ):required ":" expr:x                               -> [n, x, required],
   param          = ":" name:n                                          -> n,
   ruleName       = name
                  | spaces tsString,
@@ -109,6 +112,8 @@ export ometa BSOMetaTranslator {
   Lookahead  transFn:x                     -> ['this._lookahead(',     x, ')']                                     .join(''),
   Object     [ ( [ string:key
                    transFn:x
+                   (true|false):required
+                   {['[', x, ',', required, ']'].join('')}:x
                  ]
                  -> [JSON.stringify(key), x].join(':')
                )+:o

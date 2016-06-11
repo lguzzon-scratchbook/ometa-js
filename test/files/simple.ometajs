@@ -10,4 +10,20 @@ export ometa Simple {
 			]
 		]
 		-> 'ok'
+	,
+	ObjectRules =
+		@{ 'simple': true }
+		-> 'ok'
+	,
+	ObjectRulesMatchAll1 =
+			@{	'simple': true,
+				'simpler': true
+			}
+			-> 'should fail'
+		|	-> 'ok'
+	,
+	ObjectRulesMatchAll2 =
+			@{ 'simple': true }
+			-> 'should fail'
+		|	-> 'ok'
 }

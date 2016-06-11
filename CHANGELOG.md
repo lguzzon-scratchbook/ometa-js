@@ -1,3 +1,5 @@
+* Added support for matching all keys of an object against corresponding rules,
+	eg `@{ foo: FooRule }`
 * Added support for using `_form` (`[]`) on an object input,
 	for this the object is converted into a list of key, value tuples
 	eg `{ foo: 'bar' }` -> `[ ['foo', 'bar'] ]`

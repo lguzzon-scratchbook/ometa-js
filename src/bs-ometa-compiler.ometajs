@@ -55,10 +55,15 @@ export ometa BSOMetaParser {
                  | ( keyword('undefined') | keyword('nil')
                    | keyword('true')      | keyword('false') ):x       -> [#App, #exactly, x]
                  | spaces (seqString | tokenString | string | number)
+                 | "@{" objectRules:x "}"                              -> [#Object,    x]
                  | "["  expr:x "]"                                     -> [#Form,      x]
                  | "<"  expr:x ">"                                     -> [#ConsBy,    x]
                  | "@<" expr:x ">"                                     -> [#IdxConsBy, x]
                  | "("  expr:x ")"                                     -> x,
+  objectRules    = {{}}:o
+                   (objectRule:x "," -> x)*:a
+                   objectRule:x                                        -> a.concat([x]),
+  objectRule     = BSJSParser.jsonPropName:n ":" expr:x                -> [n, x],
   param          = ":" name:n                                          -> n,
   ruleName       = name
                  | spaces tsString,
@@ -101,6 +106,12 @@ export ometa BSOMetaTranslator {
   Set        :n trans:v                    -> [n, '=', v]                                                          .join(''),
   Not        transFn:x                     -> ['this._not(',           x, ')']                                     .join(''),
   Lookahead  transFn:x                     -> ['this._lookahead(',     x, ')']                                     .join(''),
+  Object     [ ( [ string:key
+                   transFn:x
+                 ]
+                 -> [JSON.stringify(key), x].join(':')
+               )+:o
+             ]                             -> ['this._object({', o.join(','), '})']                                .join(''),
   Form       transFn:x                     -> ['this._form(',          x, ')']                                     .join(''),
   ConsBy     transFn:x                     -> ['this._consumedBy(',    x, ')']                                     .join(''),
   IdxConsBy  transFn:x                     -> ['this._idxConsumedBy(', x, ')']                                     .join(''),

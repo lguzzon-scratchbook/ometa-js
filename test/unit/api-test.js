@@ -20,15 +20,22 @@ exports['compile should work (with nodeRequirePath)'] = function(test) {
 
 var testMatches = {
 	FormArray: [ 'simple' ],
-	FormObject: { 'simple': true }
+	FormObject: { 'simple': true },
+	ObjectRules: { 'simple': true },
+	ObjectRulesMatchAll1: { 'simple': true },
+	ObjectRulesMatchAll2: { 'simple': true, 'simpler': true }
+};
+
+var runTests = function(test, grammar) {
+	Object.keys(testMatches).forEach(function(rule) {
+		test.equal(grammar.match(testMatches[rule], rule), 'ok');
+	});
 };
 
 exports['evalCode should work'] = function(test) {
 	var simple = common.evalCode('simple').Simple;
 
-	Object.keys(testMatches).forEach(function(rule) {
-		test.equal(simple.match(testMatches[rule], rule), 'ok');
-	});
+	runTests(test, simple);
 
 	test.done();
 };
@@ -36,9 +43,7 @@ exports['evalCode should work'] = function(test) {
 exports['require("...ometajs") should work'] = function(test) {
 	var simple = common.require('simple').Simple;
 
-	Object.keys(testMatches).forEach(function(rule) {
-		test.equal(simple.match(testMatches[rule], rule), 'ok');
-	});
+	runTests(test, simple);
 
 	test.done();
 };

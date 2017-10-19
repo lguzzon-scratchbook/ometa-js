@@ -27,7 +27,7 @@
   "dependencies": {
     "coa": "~1.0.1",
     "colors": "^1.1.2",
-    "q": "~1.4.1",
+    "q": "~1.5.1",
     "uglify-js": "^2.7.5"
   },
   "devDependencies": {

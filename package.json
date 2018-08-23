@@ -28,7 +28,7 @@
     "coa": "~1.0.1",
     "colors": "^1.1.2",
     "q": "~1.4.1",
-    "uglify-js": "^2.7.5"
+    "uglify-js": "^3.4.8"
   },
   "devDependencies": {
     "grunt": "~1.0.1",
